@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style id="css_mode_control">
+        #mode_intro {
+            display: none;
+        }
+
+        #mode_key {
+            display: none;
+        }
+    </style>
+    <style>
+        #mode_key {
+            text-align: center;
+        }
+    </style>
+    <style>
+        h1 {
+            text-align: center;
+        }
+        header, footer {
+            padding: 50px 0;
+        }
+        footer p {
+            font-size: 13px;
+        }
+    </style>
+    <style>
+        /* For key mode */
+        #js_gamecover {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+        #js_keystring {
+            font-family: 'JetBrains Mono', 'Ubuntu Mono', 'Courier New', Courier, monospace;
+            font-weight: 600;
+            font-size: 22px;
+            text-align: center;
+            padding: 30px 0;
+        }
+        #js_keystring_span {
+            display: inline-block;
+            padding: 10px 15px 9px;
+            border: 1px solid black;
+            border-radius: 9px;
+        }
+    </style>
+    <script>
+        let is_key_mode = false;
+        let search_params_dict = {};
+        if (location.search.length > 0) {
+            const _tmp_params_arr = location.search.slice(1).split('&');
+            console.log(_tmp_params_arr);
+            _tmp_params_arr.forEach(function (pair_string) {
+                const key = pair_string.split('=')[0];
+                const value = pair_string.split('=').slice(1).join('=');
+                search_params_dict[key] = value;
+            });
+        };
+        console.log(search_params_dict);
+        if (Object.keys(search_params_dict).indexOf('s') > -1) {
+            is_key_mode = true;
+            document.querySelector('#css_mode_control').innerHTML = `#mode_intro { display: none; }
+            #mode_key { display: block; }`;
+        } else {
+            document.querySelector('#css_mode_control').innerHTML = `#mode_intro { display: block; }
+            #mode_key { display: none; }`;
+        }
+    </script>
+</head>
+
+<body>
+    <div id="mode_intro">
+        <header>
+            <h1>KeyHintQR</h1>
+        </header>
+        <div style="text-align: center;">
+            <p>
+                See <a href="https://github.com/nekostein/keyhintqr">GitHub</a> for usage.
+            </p>
+        </div>
+    </div>
+
+    <div id="mode_key">
+        <header>
+            <h1>A Steam Key for You</h1>
+        </header>
+        <div>
+            <img id="js_gamecover" src="" alt="Cover Image">
+            <div id="js_keystring">
+            <span id="js_keystring_span">
+            </span>
+            </div>
+            <div>
+                <a href="https://help.steampowered.com/en/faqs/view/2A12-9D79-C3D7-F870">How to activate a game on Steam</a>
+            </div>
+        </div>
+        
+        <script>
+            if (is_key_mode) {
+                const appid = search_params_dict.s.split(':')[0];
+                const coverimg_url = `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`;
+                document.querySelector('#js_gamecover').src = coverimg_url;
+                document.querySelector('#js_keystring_span').innerHTML = search_params_dict.s.split(':')[1];;
+            }
+        </script>
+    </div>
+    <footer style="text-align: center;">
+        <p>NOTICE: This site is a web tool that allows arbitrary person to share product activation keys as QR codes and NFC tags.<br />
+            The maintainer of this site does not endorse the availability of the keys shared on this page.<br />
+            The party who constructs the URL is responsible for the accuracy of the information presented here.
+        </p>
+        <p>
+            Copyright &copy; 2024 Nekostein. All rights reserved.<br />
+            Nekostein is an unincorporated game development team consisting of Neruthes and MIAO_OAIM.
+        </p>
+    </footer>
+</body>
+
+</html>
