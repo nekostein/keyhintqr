@@ -16,17 +16,34 @@
         }
     </style>
     <style>
+        html,
+        body {
+            font-family: 'SF Pro Text', 'Inter', 'TeX Gyre Heros', system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        #global-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
         #mode_key {
             text-align: center;
+        }
+
+        .content {
+            padding: 0 15px;
         }
     </style>
     <style>
         h1 {
             text-align: center;
         }
-        header, footer {
-            padding: 50px 0;
+
+        header,
+        footer {
+            padding: 90px 0;
         }
+
         footer p {
             font-size: 13px;
         }
@@ -40,6 +57,7 @@
             margin: 0 auto;
             border-radius: 10px;
         }
+
         #js_keystring {
             font-family: 'JetBrains Mono', 'Ubuntu Mono', 'Courier New', Courier, monospace;
             font-weight: 600;
@@ -47,11 +65,20 @@
             text-align: center;
             padding: 30px 0;
         }
+
         #js_keystring_span {
             display: inline-block;
             padding: 10px 15px 9px;
-            border: 1px solid black;
+            border: 1px solid #CCC;
             border-radius: 9px;
+        }
+
+        #js_btn_copy {
+            font-size: 13px;
+            transform: translateY(-2.5px);
+            border-radius: 5px;
+            border: none;
+            padding: 4px 5px;
         }
     </style>
     <script>
@@ -79,52 +106,68 @@
 </head>
 
 <body>
-    <div id="mode_intro">
-        <header>
-            <h1>KeyHintQR</h1>
-        </header>
-        <div style="text-align: center;">
-            <p>
-                See <a href="https://github.com/nekostein/keyhintqr">GitHub</a> for usage.
-            </p>
+    <div id="global-wrapper">
+        <div id="mode_intro">
+            <header>
+                <h1>KeyHintQR</h1>
+            </header>
+            <div class="content" style="text-align: center;">
+                <p>
+                    See <a href="https://github.com/nekostein/keyhintqr">GitHub</a> for usage.
+                </p>
+            </div>
         </div>
-    </div>
 
-    <div id="mode_key">
-        <header>
-            <h1>A Steam Key for You</h1>
-        </header>
-        <div>
-            <img id="js_gamecover" src="" alt="Cover Image">
-            <div id="js_keystring">
-            <span id="js_keystring_span">
-            </span>
+        <div id="mode_key">
+            <header>
+                <h1>A Steam Key for You</h1>
+            </header>
+            <div class="content">
+                <img id="js_gamecover" src="" alt="Cover Image">
+                <div id="js_keystring">
+                    <span id="js_keystring_span">
+                        <span id="js_keystring_span_inner">
+                        </span>
+                        <button id="js_btn_copy" onclick="write_clipboard_keystring();">COPY</button>
+                    </span>
+                    <input type="text" id="js_keystring_hidden_input" style="display: none;" />
+                </div>
+
+                <div>
+                    <!-- <a href="https://help.steampowered.com/en/faqs/view/2A12-9D79-C3D7-F870">How to activate a game on Steam</a> -->
+                    <a href="https://store.steampowered.com/account/redeemwalletcode">Go to redeem &rarr;</a>
+                </div>
             </div>
-            <div>
-                <a href="https://help.steampowered.com/en/faqs/view/2A12-9D79-C3D7-F870">How to activate a game on Steam</a>
-            </div>
+
+            <script>
+                if (is_key_mode) {
+                    const appid = search_params_dict.s.split(':')[0];
+                    const coverimg_url = `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`;
+                    document.querySelector('#js_gamecover').src = coverimg_url;
+                    document.querySelector('#js_keystring_span_inner').innerHTML = search_params_dict.s.split(':')[1];
+                    document.querySelector('#js_keystring_hidden_input').value = search_params_dict.s.split(':')[1];
+                };
+
+                function write_clipboard_keystring() {
+                    var copyText = document.getElementById("js_keystring_hidden_input");
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999); // For mobile devices
+                    navigator.clipboard.writeText(copyText.value);
+                };
+            </script>
         </div>
-        
-        <script>
-            if (is_key_mode) {
-                const appid = search_params_dict.s.split(':')[0];
-                const coverimg_url = `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`;
-                document.querySelector('#js_gamecover').src = coverimg_url;
-                document.querySelector('#js_keystring_span').innerHTML = search_params_dict.s.split(':')[1];;
-            }
-        </script>
+        <footer style="text-align: center;">
+            <p>NOTICE: This site is a web tool that allows arbitrary person to share product activation keys as QR codes and NFC tags.<br />
+                The maintainer of this site does not endorse the availability of the keys shared on this page.<br />
+                The party who constructs the URL is responsible for the accuracy of the information presented here.
+            </p>
+            <p>
+                Copyright &copy; 2024 Nekostein.<br />
+                Nekostein is an unincorporated game development team consisting of Neruthes and MIAO_OAIM.<br />
+                This web tool is published with the GNU GPL 2.0 license.
+            </p>
+        </footer>
     </div>
-    <footer style="text-align: center;">
-        <p>NOTICE: This site is a web tool that allows arbitrary person to share product activation keys as QR codes and NFC tags.<br />
-            The maintainer of this site does not endorse the availability of the keys shared on this page.<br />
-            The party who constructs the URL is responsible for the accuracy of the information presented here.
-        </p>
-        <p>
-            Copyright &copy; 2024 Nekostein.<br />
-            Nekostein is an unincorporated game development team consisting of Neruthes and MIAO_OAIM.<br />
-            This web tool is published with the GNU GPL 2.0 license.
-        </p>
-    </footer>
 </body>
 
 </html>
